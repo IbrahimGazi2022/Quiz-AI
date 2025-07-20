@@ -7,13 +7,9 @@ const HeroSection = () => {
             <div
                 className="absolute inset-0 z-0 opacity-10"
                 style={{
-                    backgroundImage: `
-            linear-gradient(to right, #F47458 1px, transparent 1px),
-            linear-gradient(to bottom, #F47458 1px, transparent 1px)
-          `,
-                    backgroundSize: "40px 40px",
-                }}
-            />
+                    backgroundImage: `linear-gradient(to right, #F47458 1px, transparent 1px),linear-gradient(to bottom, #F47458 1px, transparent 1px)`,
+                    backgroundSize: "60px 60px",
+                }} />
 
             <div className="absolute top-8 left-8 z-10">
                 <Image
@@ -36,7 +32,7 @@ const HeroSection = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
-                        href="/quiz"
+                        href="/quiz/topics"
                         className="bg-[#F47458] hover:bg-[#e06a50] text-white font-medium py-3 px-6 rounded-lg transition-all flex items-center gap-2"
                     >
                         Get Started

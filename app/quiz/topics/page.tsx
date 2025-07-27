@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useClerk } from "@clerk/nextjs";
 
 const TopicsPage = () => {
+  const { signOut } = useClerk();
+
   const topics = [
     {
       id: "frontend",
@@ -57,8 +62,8 @@ const TopicsPage = () => {
                 <div className="mt-auto">
                   <span className="inline-flex items-center text-sm font-medium text-[#F47458] group-hover:underline">
                     Start preparing
-                    <svg className="ml-1 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    <svg className="ml-1 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </span>
                 </div>
@@ -69,9 +74,10 @@ const TopicsPage = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <p className="text-gray-500 mb-4">Not sure where to start?</p>
-          <button className="px-6 py-3 bg-[#F47458] text-white rounded-lg hover:bg-[#E06A50] transition-colors duration-300 shadow-md hover:shadow-lg">
-            Take our skill assessment
+          <button
+            onClick={() => signOut({ redirectUrl: "/login" })}
+            className="px-6 py-3 bg-[#F47458] text-white rounded-lg hover:bg-[#E06A50] transition-colors duration-300 shadow-md hover:shadow-lg">
+            Logout
           </button>
         </div>
       </div>

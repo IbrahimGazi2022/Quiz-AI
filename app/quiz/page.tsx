@@ -80,8 +80,9 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="relative min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+      <div className="absolute inset-0 z-0 bg-grid-pattern" />
+      <div className="relative z-10 w-full max-w-4xl bg-white rounded-xl shadow-md overflow-hidden">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/3 bg-gray-50 flex items-center justify-center p-4">
             <Image
@@ -113,10 +114,10 @@ export default function QuizPage() {
                   key={option.id}
                   onClick={() => handleOptionSelect(option.id)}
                   className={`p-4 border-2 rounded-lg transition-all ${selectedOption === option.id
-                      ? option.isCorrect
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-red-500 bg-red-50'
-                      : 'border-gray-200 hover:border-[#F47458]'
+                    ? option.isCorrect
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-red-500 bg-red-50'
+                    : 'border-gray-200 hover:border-[#F47458]'
                     } ${!selectedOption ? 'cursor-pointer' : 'cursor-default'}`}
                 >
                   <div className="flex items-center">
@@ -131,8 +132,8 @@ export default function QuizPage() {
               {selectedOption && (
                 <div
                   className={`flex-1 p-4 rounded-lg ${currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
                     }`}
                 >
                   {currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect

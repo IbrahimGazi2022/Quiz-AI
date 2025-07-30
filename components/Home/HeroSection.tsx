@@ -4,13 +4,7 @@ import Link from 'next/link';
 const HeroSection = () => {
     return (
         <section className="relative min-h-screen flex flex-col items-center justify-center bg-white px-4 sm:px-6 lg:px-8 overflow-hidden">
-            <div
-                className="absolute inset-0 z-0 opacity-10"
-                style={{
-                    backgroundImage: `linear-gradient(to right, #F47458 1px, transparent 1px),linear-gradient(to bottom, #F47458 1px, transparent 1px)`,
-                    backgroundSize: "60px 60px",
-                }} />
-
+            <div className="absolute inset-0 z-0 opacity-10 bg-grid-pattern" />
             <div className="absolute top-8 left-8 z-10">
                 <Image
                     src="/img/quizaoi-logo.png"

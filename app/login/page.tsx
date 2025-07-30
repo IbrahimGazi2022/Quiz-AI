@@ -61,8 +61,9 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+        <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
+            <div className="absolute inset-0 z-0 bg-grid-pattern" />
+            <div className="relative z-10 bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
                     <p className="text-gray-500">Sign in to continue to QuizApp</p>
@@ -111,7 +112,7 @@ const LoginPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#e06a50]"
+                            className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#e06a50]"
                                 }`}
                         >
                             {isLoading ? (
@@ -128,7 +129,7 @@ const LoginPage = () => {
                         <button
                             type="button"
                             onClick={fillDemoCredentials}
-                            className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+                            className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg cursor-pointer hover:bg-gray-200 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                         >
                             Use Demo Account
                         </button>
@@ -137,9 +138,7 @@ const LoginPage = () => {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     Don't have an account?{' '}
-                    <button
-                        className="font-medium text-[#F47458] hover:text-[#e06a50]"
-                    >
+                    <button className="font-medium text-[#F47458] hover:text-[#e06a50]">
                         Sign up
                     </button>
                 </div>

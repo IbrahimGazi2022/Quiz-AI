@@ -10,7 +10,7 @@ const TopicsPage = () => {
     {
       id: "frontend",
       title: "Frontend Developer",
-      description: "HTML, CSS, JavaScript, React, Vue.js",
+      description: "HTML, CSS, JavaScript, React, Next JS, Tailwindcss",
       icon: "💻",
     },
     {
@@ -20,16 +20,10 @@ const TopicsPage = () => {
       icon: "⚙️",
     },
     {
-      id: "fullstack",
-      title: "Fullstack Developer",
+      id: "database",
+      title: "Database  ",
       description: "Frontend + Backend combined questions",
       icon: "🔗",
-    },
-    {
-      id: "react",
-      title: "React Specialist",
-      description: "Advanced React, Hooks, Performance",
-      icon: "⚛️",
     },
   ];
 
@@ -45,7 +39,7 @@ const TopicsPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {topics.map((topic) => (
             <Link
               href={`/quiz?topic=${topic.id}`}
@@ -53,7 +47,7 @@ const TopicsPage = () => {
               className="group relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-white rounded-2xl shadow-sm transition-all duration-300 group-hover:shadow-md"></div>
-              <div className="relative z-10 h-full p-8 flex flex-col">
+              <div className="relative z-10 h-full p-8 flex flex-col text-center justify-center items-center">
                 <div className="w-16 h-16 bg-[#F47458]/10 rounded-xl flex items-center justify-center text-3xl mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#F47458]/20">
                   {topic.icon}
                 </div>

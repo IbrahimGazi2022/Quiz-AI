@@ -1,45 +1,55 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
-const questions = [
-  {
-    id: 1,
-    question: "Who is Anakin Skywalker when he goes to the Dark Side?",
-    options: [
-      { id: 'A', text: "Darth Sidious", isCorrect: false },
-      { id: 'B', text: "Darth Tyannus", isCorrect: false },
-      { id: 'C', text: "Darth Vader", isCorrect: true },
-      { id: 'D', text: "Darth Maul", isCorrect: false }
-    ],
-    correctAnswer: "C"
-  },
-  {
-    id: 2,
-    question: "Who trained Yoda?",
-    options: [
-      { id: 'A', text: "Qui-Gon Jinn", isCorrect: false },
-      { id: 'B', text: "Obi-Wan Kenobi", isCorrect: false },
-      { id: 'C', text: "N'Kata Del Gormo", isCorrect: true },
-      { id: 'D', text: "Mace Windu", isCorrect: false }
-    ],
-    correctAnswer: "C"
-  }
-];
+type Option = {
+  id: string;
+  label: string;
+  text: string;
+  isCorrect: boolean;
+};
+
+type Question = {
+  id: number;
+  question: string;
+  options: Option[];
+  correctAnswer: string;
+};
 
 export default function QuizPage() {
   const router = useRouter();
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(true);
   const [score, setScore] = useState(0);
+  const searchParams = useSearchParams();
+
+  // fetch questions from API
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const topic = searchParams.get("topic") || "frontend";
+        const res = await fetch(`/api/questions?topic=${topic}`);
+        const data = await res.json();
+        setQuestions(data.questions);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to load questions", err);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+  // countdown timer
   useEffect(() => {
     if (!timerActive || timeLeft <= 0) return;
 
@@ -59,7 +69,7 @@ export default function QuizPage() {
   const handleOptionSelect = (optionId: string) => {
     if (selectedOption) return;
 
-    const isCorrect = currentQuestion.options.find(o => o.id === optionId)?.isCorrect;
+    const isCorrect = currentQuestion.options.find((o) => o.id === optionId)?.isCorrect;
     setSelectedOption(optionId);
     setTimerActive(false);
 
@@ -78,6 +88,16 @@ export default function QuizPage() {
       router.push(`/quiz/result?score=${score}&total=${questions.length}`);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-xl text-gray-600">
+        Loading questions...
+      </div>
+    );
+  }
+
+  if (!currentQuestion) return null;
 
   return (
     <div className="relative min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
@@ -121,7 +141,7 @@ export default function QuizPage() {
                     } ${!selectedOption ? 'cursor-pointer' : 'cursor-default'}`}
                 >
                   <div className="flex items-center">
-                    <span className="font-bold mr-3">{option.id}.</span>
+                    <span className="font-bold mr-3">{option.label}.</span>
                     <span>{option.text}</span>
                   </div>
                 </div>
@@ -131,12 +151,12 @@ export default function QuizPage() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               {selectedOption && (
                 <div
-                  className={`flex-1 p-4 rounded-lg ${currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect
+                  className={`flex-1 p-4 rounded-lg ${currentQuestion.options.find((o) => o.id === selectedOption)?.isCorrect
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
                     }`}
                 >
-                  {currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect
+                  {currentQuestion.options.find((o) => o.id === selectedOption)?.isCorrect
                     ? 'Correct! Well done.'
                     : `Incorrect. The correct answer is ${currentQuestion.correctAnswer}.`}
                 </div>
@@ -147,7 +167,7 @@ export default function QuizPage() {
                 disabled={!selectedOption && timeLeft > 0}
                 className="bg-[#F47458] hover:bg-[#e06a50] text-white font-medium py-3 px-6 rounded-lg transition-all flex items-center gap-2 disabled:opacity-50"
               >
-                {isLastQuestion ? 'SEE RESULTS' : 'NEXT QUESTION →'}
+                {isLastQuestion ? "SEE RESULTS" : "NEXT QUESTION →"}
               </button>
             </div>
           </div>

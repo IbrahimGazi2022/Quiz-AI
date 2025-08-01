@@ -15,7 +15,7 @@ export const questions: QuestionSeedData[] = [
         question: "What does the <meta charset=\"UTF-8\"> tag do in HTML?",
         topic: "frontend",
         difficulty: "easy",
-        correctAnswer: "C",
+        correctAnswer: "C", 
         options: [
             { label: "A", text: "It adds metadata for search engines", isCorrect: false },
             { label: "B", text: "It links to an external CSS file", isCorrect: false },
@@ -48,3 +48,10 @@ export const questions: QuestionSeedData[] = [
         ]
     },
 ];
+
+  
+  
+
+
+
+

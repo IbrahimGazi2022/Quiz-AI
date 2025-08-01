@@ -10,20 +10,20 @@ const TopicsPage = () => {
     {
       id: "frontend",
       title: "Frontend Developer",
-      description: "HTML, CSS, JavaScript, React, Next JS, Tailwindcss",
+      description: "HTML, CSS, JavaScript, React, Next.js, Tailwind CSS",
       icon: "💻",
     },
     {
       id: "backend",
       title: "Backend Developer",
-      description: "Node.js, Python, Django, Databases, APIs",
+      description: "Node.js, Express, REST APIs, Authentication, Server-side logic",
       icon: "⚙️",
     },
     {
       id: "database",
-      title: "Database  ",
-      description: "Frontend + Backend combined questions",
-      icon: "🔗",
+      title: "Database",
+      description: "SQL, NoSQL, PostgreSQL, MongoDB, Prisma, Relationships & Queries",
+      icon: "🗄️",
     },
   ];
 

@@ -11,13 +11,12 @@ export async function GET(request: Request) {
             include: {
                 options: true,
             },
-            take: 5,
-            orderBy: {
-                id: 'asc',
-            },
         });
 
-        return NextResponse.json({ questions });
+        const shuffled = questions.sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, 5);
+
+        return NextResponse.json({ questions: selected });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Failed to fetch questions' }, { status: 500 });

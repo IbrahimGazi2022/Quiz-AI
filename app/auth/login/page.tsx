@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSignIn, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 const LoginPage = () => {
     const router = useRouter();
@@ -28,8 +29,7 @@ const LoginPage = () => {
         setErrorMsg("");
         try {
             const result = await signIn.create({
-                identifier: email,
-                password,
+                identifier: email, password,
             });
 
             if (result.status === "complete") {
@@ -138,9 +138,9 @@ const LoginPage = () => {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     Don't have an account?{' '}
-                    <button className="font-medium text-[#F47458] hover:text-[#e06a50]">
+                    <Link href="/auth/register" className="font-medium text-[#F47458] hover:text-[#e06a50]">
                         Sign up
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

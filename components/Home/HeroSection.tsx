@@ -24,10 +24,10 @@ const HeroSection = () => {
                     Double your chances of landing that job offer with our AI-powered interview prep
                 </p>
 
-                {/* Button */}
+                {/* Get Started& Sign up Button */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
-                        href="/login"
+                        href="/auth/login"
                         className="bg-[#F47458] hover:bg-[#e06a50] text-white font-medium py-3 px-6 rounded-lg transition-all flex items-center gap-2"
                     >
                         Get Started
@@ -40,16 +40,21 @@ const HeroSection = () => {
                         </svg>
                     </Link>
 
-                    <button className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-all flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                clipRule="evenodd"
-                            />
+                    <Link href="/auth/register" className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-all flex items-center gap-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 flex-shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20 8v6m3-3h-6" />
                         </svg>
-                        Watch Video
-                    </button>
+                        Sign Up Free
+                    </Link>
                 </div>
 
                 {/* Featured In Section */}

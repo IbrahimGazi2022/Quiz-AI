@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/prisma';
 
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const topic = searchParams.get('topic');
 
-        const questions = await prisma.question.findMany({
+        const questions = await db.question.findMany({
             where: topic ? { topic } : {},
             include: {
                 options: true,

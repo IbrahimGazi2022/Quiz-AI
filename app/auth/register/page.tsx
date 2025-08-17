@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
+import { Loader } from "@/components/UI/Loader";
 
 const RegisterPage = () => {
     const router = useRouter();
 
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -25,10 +27,12 @@ const RegisterPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true);
 
         // Validate password match
         if (formData.password !== formData.confirmPassword) {
             setError("Passwords do not match");
+            setIsLoading(false);
             return;
         }
 
@@ -49,16 +53,26 @@ const RegisterPage = () => {
             if (!res.ok) {
                 const data = await res.json();
                 setError(data.message || "Failed to register");
+                setIsLoading(false);
                 return;
             }
             router.push("/auth/login");
         } catch {
             setError("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
+            {/* Loader */}
+            {isLoading && (
+                <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+                    <Loader />
+                </div>
+            )}
+
             <div className="absolute inset-0 z-0 bg-grid-pattern" />
             <div className="relative z-10 bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
                 <div className="text-center mb-8">
@@ -126,9 +140,10 @@ const RegisterPage = () => {
                     <div>
                         <button
                             type="submit"
+                            disabled={isLoading}
                             className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 `}
                         >
-                            Sign Up
+                            "Sign Up"
                         </button>
                     </div>
                 </form>

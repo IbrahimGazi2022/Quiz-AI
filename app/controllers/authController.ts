@@ -19,7 +19,7 @@ export const registerUser = async (userData: unknown) => {
     });
 
     if (existingUser) {
-        throw new Error("User with this email already exists");
+        throw new Error("This email already exists");
     }
 
     try {

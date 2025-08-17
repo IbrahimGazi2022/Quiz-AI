@@ -1,80 +1,61 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSignUp, useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/UI/Input";
 
 const RegisterPage = () => {
     const router = useRouter();
-    const { isSignedIn } = useUser();
-    const { signUp, isLoaded, setActive } = useSignUp();
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
-    const [infoMsg, setInfoMsg] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
 
-    useEffect(() => {
-        if (isSignedIn) {
-            router.push("/quiz/topics");
-        }
-    }, [isSignedIn, router]);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({ ...prev, [id]: value }));
+    };
 
-    const handleRegister = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!isLoaded || isLoading) return;
+        setError("");
 
-        setErrorMsg("");
-        setInfoMsg("");
-
-        if (password !== confirmPassword) {
-            setErrorMsg("Passwords don't match");
+        // Validate password match
+        if (formData.password !== formData.confirmPassword) {
+            setError("Passwords do not match");
             return;
         }
 
-        setIsLoading(true);
-
         try {
-            const result = await signUp.create({
-                emailAddress: email,
-                password,
-            });
+            const res = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            })
 
-            if (result.status === "complete") {
-                await signUp.update({
-                    firstName: firstName.trim(),
-                    lastName: lastName.trim(),
-                });
-
-                await setActive({ session: result.createdSessionId });
-                router.push("/quiz/topics");
-
-            } else if (result.status === "needs_email_verification" as any) {
-                setInfoMsg("Please verify your email address. A verification link has been sent to your email.");
-
-            } else {
-                setErrorMsg("Please complete the verification process.");
+            if (!res.ok) {
+                const data = await res.json();
+                setError(data.message || "Failed to register");
+                return;
             }
-        } catch (err: any) {
-            console.error("Registration error:", err);
-            if (err.errors?.[0]?.code === "form_password_pwned") {
-                setErrorMsg("Password is too common. Please choose a stronger one.");
-            } else if (err.errors?.[0]?.code === "form_param_format_invalid") {
-                setErrorMsg("Invalid email format");
-            } else if (err.errors?.[0]?.code === "form_identifier_exists") {
-                setErrorMsg("An account with this email already exists");
-            } else {
-                setErrorMsg(err.errors?.[0]?.message || "Registration failed. Please try again.");
-            }
-        } finally {
-            setIsLoading(false);
+            router.push("/auth/login");
+        } catch {
+            setError("Something went wrong. Please try again.");
         }
-    };
+    }
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
@@ -85,118 +66,69 @@ const RegisterPage = () => {
                     <p className="text-gray-500">Sign up to get started with QuizApp</p>
                 </div>
 
-                <form className="space-y-6" onSubmit={handleRegister}>
+                <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                                First Name
-                            </label>
-                            <input
-                                id="firstName"
-                                type="text"
-                                required
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                                placeholder="John"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                                Last Name
-                            </label>
-                            <input
-                                id="lastName"
-                                type="text"
-                                required
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                                placeholder="Doe"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
+                        <Input
+                            label="First Name"
+                            id="firstName"
+                            type="text"
                             required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                            placeholder="your@email.com"
-                            autoComplete="email"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            placeholder="John"
+                        />
+                        <Input
+                            label="Last Name"
+                            id="lastName"
+                            type="text"
+                            required
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            placeholder="Doe"
                         />
                     </div>
+                    <Input
+                        label="Email Address"
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="your@email.com"
+                        autoComplete="email"
+                    />
 
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            type="password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                            placeholder="••••••••"
-                            autoComplete="new-password"
-                        />
-                    </div>
+                    <Input
+                        label="Password"
+                        id="password"
+                        type="password"
+                        required
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                    />
 
-                    <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                            Confirm Password
-                        </label>
-                        <input
-                            id="confirmPassword"
-                            type="password"
-                            required
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                            placeholder="••••••••"
-                            autoComplete="new-password"
-                        />
-                    </div>
+                    <Input
+                        label="Confirm Password"
+                        id="confirmPassword"
+                        type="password"
+                        required
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                    />
 
-                    {/* Clerk CAPTCHA container for Smart CAPTCHA */}
-                    <div id="clerk-captcha" className="mt-2"></div>
-
-                    {errorMsg && (
-                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg">
-                            {errorMsg}
-                        </div>
-                    )}
-
-                    {infoMsg && (
-                        <div className="p-3 bg-green-50 text-green-700 text-sm rounded-lg">
-                            {infoMsg}
-                        </div>
-                    )}
+                    {/* set error */}
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
 
                     <div>
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#e06a50]"
-                                }`}
+                            className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 `}
                         >
-                            {isLoading ? (
-                                <>
-                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Creating account...
-                                </>
-                            ) : "Sign Up"}
+                            Sign Up
                         </button>
                     </div>
                 </form>

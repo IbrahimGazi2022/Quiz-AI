@@ -1,67 +1,70 @@
 'use client';
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSignIn, useUser } from "@clerk/nextjs";
+import { Input } from "@/components/UI/Input";
+import { Loader } from "@/components/UI/Loader";
 import Link from "next/link";
 
 const LoginPage = () => {
     const router = useRouter();
-    const { isSignedIn } = useUser();
-    const { signIn, isLoaded, setActive } = useSignIn();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
+    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
 
-    useEffect(() => {
-        if (isSignedIn) {
-            router.push("/quiz/topics");
-        }
-    }, [isSignedIn, router]);
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!isLoaded || isLoading) return;
-        setIsLoading(true);
-        setErrorMsg("");
-        try {
-            const result = await signIn.create({
-                identifier: email, password,
-            });
-
-            if (result.status === "complete") {
-                await setActive({ session: result.createdSessionId });
-                router.push("/quiz/topics");
-            } else {
-                setErrorMsg("Please complete additional authentication steps");
-            }
-        } catch (err: any) {
-            console.error("Login error:", err);
-            if (err.errors?.[0]?.code === "form_identifier_exists") {
-                router.push("/quiz/topics");
-                return;
-            } else if (err.errors?.[0]?.code === "form_password_incorrect") {
-                setErrorMsg("Incorrect password. Please try again.");
-            } else if (err.errors?.[0]?.code === "form_identifier_not_found") {
-                setErrorMsg("Account not found. Please check your email.");
-            } else {
-                setErrorMsg(err.errors?.[0]?.message || "Login failed. Please try again.");
-            }
-        } finally {
-            setIsLoading(false);
-        }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    const fillDemoCredentials = () => {
-        setEmail("admin@admin.com");
-        setPassword("$Islam1234");
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
+
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.message || "Login failed");
+                setIsLoading(false);
+                return;
+            }
+
+            // Save JWT token in localStorage
+            localStorage.setItem("token", data.data.token);
+
+            // Optionally save user info
+            localStorage.setItem("user", JSON.stringify(data.data.user));
+
+            setIsLoading(false);
+            router.push("/pages/category"); // redirect after login
+        } catch {
+            setError("Something went wrong. Please try again.");
+            setIsLoading(false);
+        }
+
     };
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
+
+            {isLoading && (
+                <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+                    <Loader />
+                </div>
+            )}
+
             <div className="absolute inset-0 z-0 bg-grid-pattern" />
             <div className="relative z-10 bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
                 <div className="text-center mb-8">
@@ -69,44 +72,30 @@ const LoginPage = () => {
                     <p className="text-gray-500">Sign in to continue to QuizApp</p>
                 </div>
 
-                <form className="space-y-6" onSubmit={handleLogin}>
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                            placeholder="your@email.com"
-                            autoComplete="username"
-                        />
-                    </div>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <Input
+                        label="Email Address"
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="your@email.com"
+                        autoComplete="email"
+                    />
 
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            type="password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F47458] focus:border-[#F47458] transition"
-                            placeholder="••••••••"
-                            autoComplete="current-password"
-                        />
-                    </div>
+                    <Input
+                        label="Password"
+                        id="password"
+                        type="password"
+                        required
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                    />
 
-                    {errorMsg && (
-                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg">
-                            {errorMsg}
-                        </div>
-                    )}
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
 
                     <div className="space-y-4">
                         <button
@@ -115,20 +104,12 @@ const LoginPage = () => {
                             className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#e06a50]"
                                 }`}
                         >
-                            {isLoading ? (
-                                <>
-                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Signing in...
-                                </>
-                            ) : "Sign In"}
+                            Sign In
                         </button>
 
                         <button
                             type="button"
-                            onClick={fillDemoCredentials}
+                            // onClick={fillDemoCredentials}
                             className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg cursor-pointer hover:bg-gray-200 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                         >
                             Use Demo Account

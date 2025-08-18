@@ -1,6 +1,11 @@
-import React from 'react'
+"use client"; ``
+
+import React, { useState } from 'react'
+import Link from 'next/link';
+import { Loader } from "@/components/UI/Loader";
 
 const page = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const technologies = [
         {
             name: 'React',
@@ -60,6 +65,12 @@ const page = () => {
 
     return (
         <div className='relative flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-6'>
+            {/* Loader */}
+            {isLoading && (
+                <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+                    <Loader />
+                </div>
+            )}
             <div className="absolute inset-0 z-0 opacity-10 bg-grid-pattern" />
             <div className='max-w-6xl w-full'>
                 <div className='text-center mb-12'>
@@ -69,7 +80,7 @@ const page = () => {
 
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                     {technologies.map((tech, index) => (
-                        <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 z-10">
                             <div className={`${tech.color} h-2 w-full`}></div>
                             <div className="p-6 flex flex-col items-center">
                                 <div className={`w-20 h-20 ${tech.color} rounded-full flex items-center justify-center mb-4`}>
@@ -101,9 +112,17 @@ const page = () => {
                                     </div>
                                 </div>
 
-                                <button className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${tech.textColor} border ${tech.textColor.replace('text', 'border')} hover:bg-opacity-10 ${tech.color.replace('bg', 'hover:bg')}`}>
+                                <Link
+                                    href="/auth/login"
+                                    onClick={() => setIsLoading(true)}
+                                    className={`inline-flex w-full justify-center py-3 rounded-lg font-semibold border ${tech.textColor} ${tech.textColor.replace(
+                                        'text',
+                                        'border'
+                                    )} bg-white hover:${tech.color} transition-colors duration-300`}
+                                >
                                     Start Assessment
-                                </button>
+                                </Link>
+
                             </div>
                         </div>
                     ))}

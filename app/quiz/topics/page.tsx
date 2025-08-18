@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
 
 const TopicsPage = () => {
-  const { signOut } = useClerk();
 
   const topics = [
     {
@@ -69,7 +67,6 @@ const TopicsPage = () => {
 
         <div className="mt-16 text-center">
           <button
-            onClick={() => signOut({ redirectUrl: "/login" })}
             className="px-6 py-3 bg-[#F47458] text-white rounded-lg hover:bg-[#E06A50] transition-colors duration-300 shadow-md hover:shadow-lg cursor-pointer">
             Logout
           </button>

@@ -41,14 +41,10 @@ const LoginPage = () => {
                 return;
             }
 
-            // Save JWT token in localStorage
             localStorage.setItem("token", data.data.token);
-
-            // Optionally save user info
             localStorage.setItem("user", JSON.stringify(data.data.user));
-
             setIsLoading(false);
-            router.push("/pages/category"); // redirect after login
+            router.push("/pages/category");
         } catch {
             setError("Something went wrong. Please try again.");
             setIsLoading(false);
@@ -56,6 +52,13 @@ const LoginPage = () => {
 
     };
 
+    const fillDemoCredentials = () => {
+        setFormData({
+            email: "demo.account@gmail.com",
+            password: "@Demo1234",
+        });
+    };
+    
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
 
@@ -109,7 +112,7 @@ const LoginPage = () => {
 
                         <button
                             type="button"
-                            // onClick={fillDemoCredentials}
+                            onClick={fillDemoCredentials}
                             className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg cursor-pointer hover:bg-gray-200 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                         >
                             Use Demo Account

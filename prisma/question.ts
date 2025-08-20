@@ -12,45 +12,71 @@ type QuestionSeedData = {
 
 export const questions: QuestionSeedData[] = [
     {
-        question: "What does the <meta charset=\"UTF-8\"> tag do in HTML?",
-        topic: "frontend",
+        question: "What is the main purpose of Next.js?",
+        topic: "next",
         difficulty: "easy",
-        correctAnswer: "C", 
-        options: [
-            { label: "A", text: "It adds metadata for search engines", isCorrect: false },
-            { label: "B", text: "It links to an external CSS file", isCorrect: false },
-            { label: "C", text: "It sets the character encoding to UTF-8", isCorrect: true },
-            { label: "D", text: "It defines the viewport settings", isCorrect: false }
-        ]
-    },
-    {
-        question: "Which HTTP method is typically used to update data on a server?",
-        topic: "backend",
-        difficulty: "medium",
         correctAnswer: "B",
         options: [
-            { label: "A", text: "GET", isCorrect: false },
-            { label: "B", text: "PUT", isCorrect: true },
-            { label: "C", text: "DELETE", isCorrect: false },
-            { label: "D", text: "OPTIONS", isCorrect: false }
+            { label: "A", text: "It is a state management library", isCorrect: false },
+            { label: "B", text: "It is a React framework for server-side rendering and static site generation", isCorrect: true },
+            { label: "C", text: "It is a CSS framework", isCorrect: false },
+            { label: "D", text: "It is a database management tool", isCorrect: false }
         ]
     },
     {
-        question: "What is the primary key used for in a relational database?",
-        topic: "database",
+        question: "Which folder is used for defining API routes in Next.js?",
+        topic: "next",
         difficulty: "easy",
-        correctAnswer: "A",
+        correctAnswer: "C",
         options: [
-            { label: "A", text: "To uniquely identify each record", isCorrect: true },
-            { label: "B", text: "To store large binary data", isCorrect: false },
-            { label: "C", text: "To link to external tables", isCorrect: false },
-            { label: "D", text: "To encrypt data", isCorrect: false }
+            { label: "A", text: "pages/components", isCorrect: false },
+            { label: "B", text: "pages/static", isCorrect: false },
+            { label: "C", text: "pages/api", isCorrect: true },
+            { label: "D", text: "pages/hooks", isCorrect: false }
         ]
     },
-];
+    {
+        question: "What does getStaticProps do in Next.js?",
+        topic: "next",
+        difficulty: "medium",
+        correctAnswer: "A",
+        options: [
+            { label: "A", text: "Fetches data at build time for static generation", isCorrect: true },
+            { label: "B", text: "Fetches data on every client request", isCorrect: false },
+            { label: "C", text: "Updates component state dynamically", isCorrect: false },
+            { label: "D", text: "Handles client-side routing", isCorrect: false }
+        ]
+    },
+    {
+        question: "What is the purpose of the Link component in Next.js?",
+        topic: "next",
+        difficulty: "easy",
+        correctAnswer: "B",
+        options: [
+            { label: "A", text: "To fetch data from the server", isCorrect: false },
+            { label: "B", text: "To enable client-side navigation between pages", isCorrect: true },
+            { label: "C", text: "To style components using CSS modules", isCorrect: false },
+            { label: "D", text: "To handle server-side authentication", isCorrect: false }
+        ]
+    },
+    {
+        question: "Which Next.js feature allows pre-rendering pages on the server for each request?",
+        topic: "next",
+        difficulty: "medium",
+        correctAnswer: "C",
+        options: [
+            { label: "A", text: "getStaticProps", isCorrect: false },
+            { label: "B", text: "getServerSidePaths", isCorrect: false },
+            { label: "C", text: "getServerSideProps", isCorrect: true },
+            { label: "D", text: "useEffect", isCorrect: false }
+        ]
+    }
+]
 
-  
-  
+
+
+
+
 
 
 

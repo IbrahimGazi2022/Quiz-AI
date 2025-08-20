@@ -75,7 +75,6 @@ export const loginUser = async (userData: unknown) => {
         throw new Error(INVALID_MSG);
     }
 
-    // JWT generate
     const token = jwt.sign(
         { id: user.id, email: user.email },
         JWT_SECRET,

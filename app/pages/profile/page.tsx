@@ -1,14 +1,27 @@
+'use client';
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 const ProfilePage = () => {
+
     const user = {
         name: "Ibrahim Gazi",
         email: "ibrahimgazi@example.com",
         avatarUrl: "/img/user.svg",
         createdAt: "2025-08-21",
-        totalQuizzes: 12,
-        lastQuizScore: 87,
         preferredCategory: "JavaScript",
         skillLevel: "Intermediate",
     };
+
+    const [stats, setStats] = useState<any | null>(null);
+
+    useEffect(() => {
+        const statsRaw = localStorage.getItem("quiz:stats");
+        if (statsRaw) {
+            setStats(JSON.parse(statsRaw));
+        }
+    }, []);
 
     const motherColor = "#F47458";
 
@@ -64,34 +77,44 @@ const ProfilePage = () => {
                     {/* Detailed Quiz Performance */}
                     <div className="bg-white shadow-lg rounded-2xl p-6">
                         <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Last Quiz Performance</h2>
-                        <ul className="space-y-3">
-                            <li className="flex justify-between text-gray-700">
-                                <span>Total quizzes taken:</span>
-                                <span>{user.totalQuizzes}</span>
-                            </li>
-                            <li className="flex justify-between text-gray-700">
-                                <span>Last quiz score:</span>
-                                <span>{user.lastQuizScore}%</span>
-                            </li>
-                            <li className="flex justify-between text-gray-700">
-                                <span>Accuracy:</span>
-                                <span>87%</span>
-                            </li>
-                            <li className="flex justify-between text-gray-700">
-                                <span>Time spent:</span>
-                                <span>3 minutes</span>
-                            </li>
-                        </ul>
+
+                        {!stats ? (
+                            <p className="text-gray-500">No quizzes taken yet.</p>
+                        ) : (
+                            <ul className="space-y-3">
+                                <li className="flex justify-between text-gray-700">
+                                    <span>Total Quiz Round taken:</span>
+                                    <span>{stats.totalQuizzes}</span>
+                                </li>
+                                <li className="flex justify-between text-gray-700">
+                                    <span>Last quiz score:</span>
+                                    <span>{stats.lastQuiz.score}/{stats.lastQuiz.total} ({stats.lastQuiz.accuracyPercent}%)</span>
+                                </li>
+                                <li className="flex justify-between text-gray-700">
+                                    <span>Accuracy:</span>
+                                    <span>{stats.lastQuiz.accuracyPercent}%</span>
+                                </li>
+                                <li className="flex justify-between text-gray-700">
+                                    <span>Time spent:</span>
+                                    <span>
+                                        {Math.floor(stats.lastQuiz.timeSpentSec / 60)}m {stats.lastQuiz.timeSpentSec % 60}s
+                                    </span>
+                                </li>
+                            </ul>
+                        )}
                     </div>
+
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <button style={{ backgroundColor: motherColor }} className="text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0zM15 5l-10 10v1h1l10-10-1-1z" />
-                            </svg>
-                            Edit Profile
-                        </button>
+                        <Link href="/pages/category">
+                            <button
+                                style={{ backgroundColor: motherColor }}
+                                className="text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center"
+                            >
+                                Take Another Round ?
+                            </button>
+                        </Link>
                         <button className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors">
                             Logout
                         </button>

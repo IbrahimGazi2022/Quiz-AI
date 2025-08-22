@@ -121,7 +121,7 @@ const Page = () => {
     ];
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F47458] to-gray-100">
+        <div className="relative flex items-center justify-center min-h-screen ">
             <div className="absolute top-5 right-27 z-50" ref={dropdownRef}>
                 <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -189,10 +189,10 @@ const Page = () => {
                             key={topic.id}
                             className="group relative overflow-hidden"
                         >
-                            <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 z-10">
+                            <div className="bg-white rounded-xl border-1 border-gray-200 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 z-10">
                                 <div className={`${topic.color} h-2 w-full`} />
 
-                                <div className="p-6 flex flex-col items-center">
+                                <div className="p-6 flex flex-col items-center ">
                                     {/* Icon */}
                                     <div
                                         className={`w-20 h-20 ${topic.color} rounded-full flex items-center justify-center mb-4`}

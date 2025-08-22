@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { Loader } from "@/components/UI/Loader";
 
 type Option = {
   id: string;
@@ -28,6 +29,7 @@ export default function QuizPage() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(true);
   const [score, setScore] = useState(0);
+  const [quizStartAt] = useState(new Date());
   const searchParams = useSearchParams();
 
   // fetch questions from API
@@ -79,20 +81,59 @@ export default function QuizPage() {
   };
 
   const handleNextQuestion = () => {
+    const saveQuizResult = (finalScore: number) => {
+      const total = questions.length;
+      const accuracyPercent = Math.round((finalScore / total) * 100);
+      const timeSpentSec = Math.round((Date.now() - quizStartAt.getTime()) / 1000);
+
+      // --- make new record --- 
+      const newRecord = {
+        topic: searchParams.get("topic") || "react",
+        score: finalScore,
+        total,
+        accuracyPercent,
+        timeSpentSec,
+        startedAt: quizStartAt.toISOString(),
+        finishedAt: new Date().toISOString(),
+      }
+
+      // --- Stats Update ---
+      const statsRaw = localStorage.getItem("quiz:stats");
+      const stats = statsRaw ? JSON.parse(statsRaw) : { totalQuizzes: 0, lastQuiz: null };
+
+      const updatedStats = {
+        totalQuizzes: stats.totalQuizzes + 1,
+        lastQuiz: newRecord,
+      };
+
+      localStorage.setItem("quiz:stats", JSON.stringify(updatedStats));
+
+      // --- History Update ---
+      const historyRaw = localStorage.getItem("quiz:history");
+      const history = historyRaw ? JSON.parse(historyRaw) : [];
+
+      history.unshift(newRecord);
+      if (history.length > 50) history.pop();
+
+      localStorage.setItem("quiz:history", JSON.stringify(history));
+    };
+
+
     if (!isLastQuestion) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
       setTimeLeft(30);
       setTimerActive(true);
     } else {
-      router.push(`/quiz/result?score=${score}&total=${questions.length}`);
+      saveQuizResult(score);
+      router.push("/pages/profile");
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-xl text-gray-600">
-        Loading questions...
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+        <Loader />
       </div>
     );
   }

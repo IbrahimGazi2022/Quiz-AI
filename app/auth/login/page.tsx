@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
 import { Loader } from "@/components/UI/Loader";
 import Link from "next/link";
+import toast from 'react-hot-toast';
+
 
 const LoginPage = () => {
     const router = useRouter();
@@ -43,6 +45,7 @@ const LoginPage = () => {
 
             localStorage.setItem("token", data.data.token);
             localStorage.setItem("user", JSON.stringify(data.data.user));
+            toast.success("Login successful! 🎉");
             setIsLoading(false);
             router.push("/pages/category");
         } catch {
@@ -58,7 +61,7 @@ const LoginPage = () => {
             password: "@Demo1234",
         });
     };
-    
+
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white p-4">
 

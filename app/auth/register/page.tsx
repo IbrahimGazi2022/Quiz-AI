@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
 import { Loader } from "@/components/UI/Loader";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
     const router = useRouter();
@@ -56,6 +57,7 @@ const RegisterPage = () => {
                 setIsLoading(false);
                 return;
             }
+            toast.success("Register successful! 🎉");
             router.push("/auth/login");
         } catch {
             setError("Something went wrong. Please try again.");
@@ -143,7 +145,7 @@ const RegisterPage = () => {
                             disabled={isLoading}
                             className={`w-full flex justify-center items-center gap-2 bg-[#F47458] text-white py-3 px-4 rounded-lg transition cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-[#F47458] focus:ring-offset-2 `}
                         >
-                            "Sign Up"
+                            Sign Up
                         </button>
                     </div>
                 </form>

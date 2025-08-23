@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Loader } from "@/components/UI/Loader";
+import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
 
 const ProfilePage = () => {
-
     const user = {
         name: "Ibrahim Gazi",
         email: "ibrahimgazi@example.com",
@@ -14,6 +15,7 @@ const ProfilePage = () => {
         skillLevel: "Intermediate",
     };
 
+    const { loading, isAuthenticated } = useProtectRoute({ redirect: "/auth/login" });
     const [stats, setStats] = useState<any | null>(null);
 
     useEffect(() => {
@@ -22,6 +24,18 @@ const ProfilePage = () => {
             setStats(JSON.parse(statsRaw));
         }
     }, []);
+
+    if (loading) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
+                <Loader />
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) {
+        return null;
+    }
 
     const motherColor = "#F47458";
 

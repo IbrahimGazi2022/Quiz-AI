@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader } from "@/components/UI/Loader";
+import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
 
 interface Topic {
     id: string;
@@ -18,24 +18,34 @@ interface Topic {
 
 
 const Page = () => {
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { loading, isAuthenticated } = useProtectRoute({ redirect: "/auth/login" });
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setDropdownOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    if (loading) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
+                <Loader />
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) {
+        return null;
+    }
+
 
     const topics: Topic[] = [
         {
@@ -185,7 +195,7 @@ const Page = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {topics.map((topic) => (
                         <Link
-                            href={`/quiz?topic=${topic.id}`}
+                            href={`/pages/quiz?topic=${topic.id}`}
                             key={topic.id}
                             className="group relative overflow-hidden"
                         >

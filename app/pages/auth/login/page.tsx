@@ -1,17 +1,25 @@
 'use client';
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
 import { Loader } from "@/components/UI/Loader";
-import Link from "next/link";
-import toast from 'react-hot-toast';
-
 
 const LoginPage = () => {
     const router = useRouter();
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            setIsLoading(true);
+            router.replace("/pages/category");
+        }
+    }, [router]);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -125,7 +133,7 @@ const LoginPage = () => {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     Don't have an account?{' '}
-                    <Link href="/auth/register" className="font-medium text-[#F47458] hover:text-[#e06a50]">
+                    <Link href="/pages/auth/register" className="font-medium text-[#F47458] hover:text-[#e06a50]">
                         Sign up
                     </Link>
                 </div>

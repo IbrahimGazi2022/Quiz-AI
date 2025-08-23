@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
 import { Loader } from "@/components/UI/Loader";
@@ -9,9 +9,18 @@ import toast from "react-hot-toast";
 
 const RegisterPage = () => {
     const router = useRouter();
-
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            setIsLoading(true);
+            router.replace("/pages/category");
+        }
+    }, [router]);
+
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -153,7 +162,7 @@ const RegisterPage = () => {
                 <div className="mt-6 text-center text-sm text-gray-500">
                     Already have an account?{' '}
                     <Link
-                        href="/auth/login"
+                        href="/pages/auth/login"
                         className="font-medium text-[#F47458] hover:text-[#e06a50]"
                     >
                         Sign in

@@ -59,7 +59,7 @@ const Page = () => {
             textColor: "text-blue-600",
         },
         {
-            id: "next",
+            id: "nextjs",
             name: "Next JS",
             time: "25 Minutes",
             questions: 15,
@@ -69,7 +69,7 @@ const Page = () => {
             textColor: "text-gray-600",
         },
         {
-            id: "js",
+            id: "javascript",
             name: "JavaScript",
             time: "20 Minutes",
             questions: 12,
@@ -99,7 +99,7 @@ const Page = () => {
             textColor: "text-teal-600",
         },
         {
-            id: "node",
+            id: "nodejs",
             name: "Node.js",
             time: "30 Minutes",
             questions: 20,

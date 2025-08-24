@@ -22,12 +22,12 @@ model Question {
   question      String
   topic         String
   difficulty    Difficulty
-  options       Option[]
   correctAnswer String
   usageCount    Int        @default(0)
   lastUsedAt    DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  options       Option[]
 }
 
 model Option {
@@ -35,8 +35,8 @@ model Option {
   label      String
   text       String
   isCorrect  Boolean
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 enum Difficulty {

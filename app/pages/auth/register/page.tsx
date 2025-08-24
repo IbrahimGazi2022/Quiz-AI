@@ -67,7 +67,7 @@ const RegisterPage = () => {
                 return;
             }
             toast.success("Register successful! 🎉");
-            router.push("/auth/login");
+            router.push("/pages/auth/login");
         } catch {
             setError("Something went wrong. Please try again.");
         } finally {

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Loader } from "@/components/UI/Loader";
 import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
+import Image from "next/image";
 
 interface Topic {
     id: string;
@@ -16,14 +17,13 @@ interface Topic {
     textColor: string;
 }
 
-
 const Page = () => {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
     const { loading, isAuthenticated } = useProtectRoute({ redirect: "/auth/login" });
 
+    // click outside close dropdown
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -45,7 +45,6 @@ const Page = () => {
     if (!isAuthenticated) {
         return null;
     }
-
 
     const topics: Topic[] = [
         {
@@ -131,49 +130,63 @@ const Page = () => {
     ];
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen ">
-            <div className="absolute top-5 right-27 z-50" ref={dropdownRef}>
-                <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-colors"
-                >
-                    <img
-                        src="/img/user.svg"
-                        alt="User Avatar"
-                        className="w-full h-full object-cover"
+        <div className="relative flex flex-col min-h-screen">
+            {/* ------------------- Top Bar ------------------- */}
+            <header className="fixed top-0 left-0 right-0 z-50 w-full flex items-center justify-between px-6 py-2.5 bg-white/50 backdrop-blur-md border border-white/20 shadow-sm">
+                <Link href="/" className="flex items-center gap-2">
+                    <Image
+                        src="/img/quizaoi-logo.png"
+                        alt="Quizaoi Logo"
+                        width={120}
+                        height={40}
+                        className="w-24 md:w-32"
                     />
-                </button>
+                </Link>
 
-                {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                        <Link
-                            href="/pages/profile"
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                            onClick={() => setDropdownOpen(false)}
-                        >
-                            Profile
-                        </Link>
-                        <Link
-                            href="/settings"
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                            onClick={() => setDropdownOpen(false)}
-                        >
-                            Settings
-                        </Link>
-                        <button
-                            onClick={() => {
-                                console.log("Logout clicked");
-                                setDropdownOpen(false);
-                            }}
-                            className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                )}
-            </div>
+                {/* Dropdown */}
+                <div ref={dropdownRef} className="relative">
+                    <button
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-colors"
+                    >
+                        <img
+                            src="/img/user.svg"
+                            alt="User Avatar"
+                            className="w-full h-full object-cover"
+                        />
+                    </button>
 
-            {/* Loader Component */}
+                    {dropdownOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                            <Link
+                                href="/pages/profile"
+                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                onClick={() => setDropdownOpen(false)}
+                            >
+                                Profile
+                            </Link>
+                            <Link
+                                href="/settings"
+                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                                onClick={() => setDropdownOpen(false)}
+                            >
+                                Settings
+                            </Link>
+                            <button
+                                onClick={() => {
+                                    console.log("Logout clicked");
+                                    setDropdownOpen(false);
+                                }}
+                                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </header>
+
+            {/* ------------------- Page Content ------------------- */}
             {isLoading && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
                     <Loader />
@@ -181,7 +194,7 @@ const Page = () => {
             )}
 
             <div className="absolute inset-0 z-0 opacity-10 bg-grid-pattern" />
-            <div className="max-w-[1480px] w-full mt-4 px-4">
+            <div className="max-w-[1480px] w-full mt-4 px-4 mx-auto pt-25">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-800 mb-2">
                         Explore All <span className="text-[#F47458]">Mock Assessments</span>

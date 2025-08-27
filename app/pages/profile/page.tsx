@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/UI/Loader";
 import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
+import Image from "next/image";
+import UserDropdown from "../category/UserDropDown/UserDropdown";
 
 const ProfilePage = () => {
     const user = {
@@ -41,8 +43,21 @@ const ProfilePage = () => {
 
     return (
         <div className="relative min-h-screen bg-gray-50 p-6">
+            <header className="fixed top-0 left-0 right-0 z-50 w-full flex items-center justify-between px-6 py-2.5 bg-white/50 backdrop-blur-md border border-white/20 shadow-sm">
+                <Link href="/" className="flex items-center gap-2">
+                    <Image
+                        src="/img/quizaoi-logo.png"
+                        alt="Quizaoi Logo"
+                        width={120}
+                        height={40}
+                        className="w-24 md:w-32"
+                    />
+                </Link>
+
+                <UserDropdown />
+            </header>
             <div className="absolute inset-0 z-0 opacity-10 bg-grid-pattern" />
-            <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
+            <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-8 mt-20">
 
                 {/* Profile Card */}
                 <div className="md:w-1/3 bg-white shadow-xl rounded-2xl p-8 flex flex-col items-center">

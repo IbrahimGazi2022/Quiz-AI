@@ -1,38 +1,17 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Loader } from "@/components/UI/Loader";
-import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
 import Image from "next/image";
 
-interface Topic {
-    id: string;
-    name: string;
-    time: string;
-    questions: number;
-    difficulty: string;
-    icon: string;
-    color: string;
-    textColor: string;
-}
+import { useProtectRoute } from "@/components/Hooks/useProtectRoute";
+import { topics, Topic } from "./TopicList/topics";
+import UserDropdown from "./UserDropDown/UserDropdown";
 
 const Page = () => {
-    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { loading, isAuthenticated } = useProtectRoute({ redirect: "/auth/login" });
-
-    // click outside close dropdown
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setDropdownOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
     if (loading) {
         return (
@@ -45,89 +24,6 @@ const Page = () => {
     if (!isAuthenticated) {
         return null;
     }
-
-    const topics: Topic[] = [
-        {
-            id: "react",
-            name: "React",
-            time: "15 Minutes",
-            questions: 10,
-            difficulty: "Intermediate",
-            icon: "/img/topic/react.svg",
-            color: "bg-blue-100",
-            textColor: "text-blue-600",
-        },
-        {
-            id: "nextjs",
-            name: "Next JS",
-            time: "25 Minutes",
-            questions: 15,
-            difficulty: "Advanced",
-            icon: "/img/topic/next.svg",
-            color: "bg-gray-100",
-            textColor: "text-gray-600",
-        },
-        {
-            id: "javascript",
-            name: "JavaScript",
-            time: "20 Minutes",
-            questions: 12,
-            difficulty: "Intermediate",
-            icon: "/img/topic/js.svg",
-            color: "bg-yellow-100",
-            textColor: "text-yellow-600",
-        },
-        {
-            id: "ts",
-            name: "TypeScript",
-            time: "18 Minutes",
-            questions: 10,
-            difficulty: "Advanced",
-            icon: "/img/topic/ts.svg",
-            color: "bg-blue-100",
-            textColor: "text-blue-600",
-        },
-        {
-            id: "tailwind",
-            name: "Tailwind CSS",
-            time: "15 Minutes",
-            questions: 8,
-            difficulty: "Beginner",
-            icon: "/img/topic/tailwind.svg",
-            color: "bg-teal-100",
-            textColor: "text-teal-600",
-        },
-        {
-            id: "nodejs",
-            name: "Node.js",
-            time: "30 Minutes",
-            questions: 20,
-            difficulty: "Advanced",
-            icon: "/img/topic/node.svg",
-            color: "bg-green-100",
-            textColor: "text-green-600",
-        },
-        {
-            id: "react2",
-            name: "React",
-            time: "15 Minutes",
-            questions: 10,
-            difficulty: "Intermediate",
-            icon: "/img/topic/react.svg",
-            color: "bg-blue-100",
-            textColor: "text-blue-600",
-        },
-        {
-            id: "next2",
-            name: "Next JS",
-            time: "25 Minutes",
-            questions: 15,
-            difficulty: "Advanced",
-            icon: "/img/topic/next.svg",
-            color: "bg-gray-100",
-            textColor: "text-gray-600",
-        },
-    ];
 
     return (
         <div className="relative flex flex-col min-h-screen">
@@ -143,47 +39,7 @@ const Page = () => {
                     />
                 </Link>
 
-                {/* Dropdown */}
-                <div ref={dropdownRef} className="relative">
-                    <button
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-colors"
-                    >
-                        <img
-                            src="/img/user.svg"
-                            alt="User Avatar"
-                            className="w-full h-full object-cover"
-                        />
-                    </button>
-
-                    {dropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                            <Link
-                                href="/pages/profile"
-                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                                onClick={() => setDropdownOpen(false)}
-                            >
-                                Profile
-                            </Link>
-                            <Link
-                                href="/settings"
-                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                                onClick={() => setDropdownOpen(false)}
-                            >
-                                Settings
-                            </Link>
-                            <button
-                                onClick={() => {
-                                    console.log("Logout clicked");
-                                    setDropdownOpen(false);
-                                }}
-                                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <UserDropdown />
             </header>
 
             {/* ------------------- Page Content ------------------- */}
@@ -206,7 +62,7 @@ const Page = () => {
 
                 {/* ------------------- Topics Grid ------------------- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {topics.map((topic) => (
+                    {topics.map((topic: Topic) => (
                         <Link
                             href={`/pages/quiz?topic=${topic.id}`}
                             key={topic.id}

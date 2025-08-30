@@ -11,7 +11,7 @@ import UserDropdown from "./UserDropDown/UserDropdown";
 
 const Page = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { loading, isAuthenticated } = useProtectRoute({ redirect: "/auth/login" });
+    const { loading, isAuthenticated } = useProtectRoute({ redirect: "/pages/auth/login" });
 
     if (loading) {
         return (

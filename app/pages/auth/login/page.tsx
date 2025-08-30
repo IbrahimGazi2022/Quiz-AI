@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/UI/Input";
 import { Loader } from "@/components/UI/Loader";
+import Image from "next/image";
 
 const LoginPage = () => {
     const router = useRouter();
@@ -78,6 +79,18 @@ const LoginPage = () => {
                     <Loader />
                 </div>
             )}
+
+            <div className="absolute top-8 left-8 z-10">
+                <Link href="/">
+                    <Image
+                        src="/img/quizaoi-logo.png"
+                        alt="Quizaoi Logo"
+                        width={120}
+                        height={40}
+                        className="w-24 md:w-32"
+                    />
+                </Link>
+            </div>
 
             <div className="absolute inset-0 z-0 bg-grid-pattern" />
             <div className="relative z-10 bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
